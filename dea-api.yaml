@@ -1,0 +1,840 @@
+openapi: 3.0.2
+servers:
+  - url: / v3
+    varibles: {}
+info:
+  description: >-
+    DEA Datastore API based on the OpenAPI 3.0 specification.  You can find out
+    more about
+
+    Swagger at [http://swagger.io](http://swagger.io). 
+
+
+    Some useful links:
+
+    - [The DEA Datastore
+    repository](https://github.com/swagger-api/swagger-dea-datastore)
+
+    - [The source API definition for the DEA
+    Datastore](https://github.com/swagger-api/swagger-dea-datastore/blob/master/src/main/resources/openapi.yaml)
+  version: 0.0.1
+  title: Swagger DEA Datastore - OpenAPI 3.0
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+tags:
+  - name: order
+    description: Operations about orders
+  - name: datastore
+    description: Operation on Data Stores
+    externalDocs:
+      description: ''
+      url: ''
+paths:
+  /datastores:
+    post:
+      tags:
+        - datastore
+      summary: 'Create a new DEA Datastore request '
+      description: Add a new request to create a new DEA Datastore
+      operationId: addDatastoreRequest
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Order'
+                description: Return the order created
+                properties: {}
+          description: Created
+        '400':
+          description: Bad Parameters
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '429':
+          description: Too many Requests
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Eerror
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - dea_auth: []
+      requestBody:
+        description: Create a new DEA Datastore
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataStore'
+    get:
+      summary: Get the list of available Data Stores
+      description: >-
+        Get the list of available Data Stores, filtered by user or all if user
+        role is Administrator
+      operationId: ''
+      tags:
+        - datastore
+      parameters: []
+      requestBody: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: $ref
+                  $ref: '#/components/schemas/DataStore'
+                description: List of available Data Stores
+          description: OK
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - dea_auth: []
+  /orders/findByStatus:
+    get:
+      tags: &ref_3
+        - order
+      summary: Finds Orders by status
+      description: Multiple status values can be provided with comma separated strings
+      operationId: findOrdersByStatus
+      parameters:
+        - name: status
+          in: query
+          description: Status values that need to be considered for filter
+          required: false
+          explode: true
+          schema: &ref_4
+            type: string
+            enum:
+              - QUEUED
+              - IN_PROGRESS
+              - CANCELED
+              - COMPLETED
+              - FAILED
+            default: COMPLETED
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: $ref
+                  $ref: '#/components/schemas/Order'
+                description: List of orders filtered by Status
+        '400':
+          description: Invalid status value
+        '500':
+          description: Internal Server Error
+        '503':
+          description: Service Unavailable
+      security: &ref_5
+        - dea_auth: []
+  /datastores/{datastoreId}:
+    get:
+      summary: Return the DEA Data Store with the specified Id
+      description: ''
+      operationId: getDataStore
+      tags: &ref_6
+        - datastore
+      parameters: &ref_7
+        - in: path
+          name: datastoreId
+          description: DEA Data Store Id
+          schema:
+            type: string
+          required: true
+      requestBody: &ref_8 {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/DataStore'
+                description: Return the DEA Data Store with the specified Id
+          description: OK
+        '401': &ref_9
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '404': &ref_10
+          description: DEA Data Store Not Found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: $ref
+                  $ref: '#/components/schemas/DataStore'
+                maxItems: 0
+                minItems: 0
+                description: Return an empty Array
+        '500': &ref_11
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503': &ref_12
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+      security: &ref_13
+        - dea_auth: []
+  /orders:
+    get:
+      summary: Get the list of user orders
+      description: Get the list of user's orders
+      operationId: getOrders
+      tags:
+        - order
+      parameters: []
+      requestBody: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: $ref
+                  $ref: '#/components/schemas/Order'
+          description: OK
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - dea_auth: []
+  /orders/{orderId}:
+    get:
+      summary: Get the Order with the specified Id
+      description: ''
+      operationId: getOrderById
+      tags: &ref_0
+        - order
+      parameters:
+        - in: path
+          name: orderId
+          description: Order Id
+          schema: &ref_1
+            type: string
+          required: true
+      requestBody: &ref_2 {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/Order'
+                description: Order with the Specified Id
+          description: OK
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Order Not Found
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - dea_auth: []
+    delete:
+      summary: Delete the Order with the specified Id
+      description: Delete the Order with the specified Id with its children
+      operationId: deleteOrderById
+      tags: *ref_0
+      parameters:
+        - in: path
+          name: orderId
+          description: Order Id
+          schema: *ref_1
+          required: true
+      requestBody: *ref_2
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Order Not Found
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - dea_auth: []
+    put:
+      summary: Update the status of the Order with the specified Id
+      description: ''
+      operationId: updateOrderStatusById
+      tags: *ref_0
+      parameters:
+        - in: path
+          name: orderId
+          description: Order Id
+          schema: *ref_1
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: Order new Status. Possible values are CANCELED or QUEUED
+                  enum:
+                    - CANCELED
+                    - QUEUED
+              required:
+                - status
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/Order'
+                description: Return the updated Order
+          description: OK
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Order Not Found
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+  /orders/findById:
+    get:
+      tags: *ref_3
+      summary: Finds Orders by Id
+      description: >-
+        @deprecated. The /orders/{orderId} HTTP GET method should be used
+        instead
+      operationId: findOrdersById
+      parameters:
+        - name: id
+          in: query
+          description: Order Id considered for filter
+          required: true
+          explode: true
+          schema: *ref_4
+      responses:
+        '200':
+          description: Request OK
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/Order'
+                description: Requested Order
+        '400':
+          description: Invalid id value
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Order not Found
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+      security: *ref_5
+      deprecated: true
+  /datastores/{datastoreId}/products:
+    get:
+      summary: DEA Data Store products list
+      description: >-
+        Return the List of products generated after a successful creation
+        request of a DEA Data Store
+      operationId: getProductsDataStore
+      tags: *ref_6
+      parameters: *ref_7
+      requestBody: *ref_8
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/Product'
+                description: >-
+                  Return  List of products generated for the DEA Data Store with
+                  the specified Id
+          description: OK
+        '401': *ref_9
+        '404': *ref_10
+        '500': *ref_11
+        '503': *ref_12
+      security: *ref_13
+  /datastores/{datastoreId}/sourceProducts:
+    get:
+      summary: DEA Data Store Source Products list
+      description: >-
+        Return the List of Source Products used as input of the products
+        generated as outcome of a DEA DataStore creation request
+      operationId: getSourceProductsDataStore
+      tags: *ref_6
+      parameters: *ref_7
+      requestBody: *ref_8
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/SourceProduct'
+                description: >-
+                  Return  List of products used as input  for the DEA Data Store
+                  Products
+          description: OK
+        '401': *ref_9
+        '404': *ref_10
+        '500': *ref_11
+        '503': *ref_12
+      security: *ref_13
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+components:
+  schemas:
+    Order:
+      x-swagger-router-model: io.swagger.petstore.model.Order
+      properties:
+        id:
+          type: string
+          description: Order ID
+        dataStoreId:
+          type: string
+          description: Id of the corresponding Data Store Request
+        status:
+          type: string
+          description: Order Status
+          example: COMPLETED
+          enum:
+            - QUEUED
+            - IN_PROGRESS
+            - CANCELED
+            - COMPLETED
+            - FAILED
+          default: QUEUED
+        submissionDate:
+          type: string
+          description: >-
+            Date and time at which the Order was created after a /datastore POST
+            request
+          format: date-time
+          pattern: YYYY-MM-DDThh:mm:ss.sssZ
+        completedDate:
+          type: string
+          description: >-
+            Date and time at which the Order status was set to COMPLETED or
+            FAILED 
+          format: date-time
+          pattern: YYYY-MM-DDThh:mm:ss.sssZ
+        statusMessage:
+          type: string
+          description: Details on the order status
+      xml:
+        name: order
+      type: object
+      required:
+        - submissionDate
+        - status
+        - dataStoreId
+        - id
+    ApiResponse:
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: HTTP Status Code
+          default: 500
+        description:
+          type: string
+          description: 'Error cause  '
+          default: An Error Occurred
+        message:
+          type: string
+          description: Error message
+          default: Failed to execute Job. No products Found.
+      xml:
+        name: '##default'
+      type: object
+      required: []
+      description: Object used as response in case of errors
+    DataStore:
+      x-swagger-router-model: io.swagger.petstore.model.Pet
+      required:
+        - datasource
+        - start
+        - producttype
+      properties:
+        id:
+          type: string
+          description: DataStore id
+        datasource:
+          type: string
+          example: ECMWF-HRES
+          pattern: ''
+          enum:
+            - Copernicus-DEM
+            - CMEMS
+            - ECMWF-HRES
+            - ECMWF_ENS
+            - ECMWF-ERA5
+            - Sentinel-2
+          description: Product Data Source
+        producttype:
+          type: array
+          items:
+            type: string
+          description: >-
+            Product Type. The allowed values depend on the Data Source. If the
+            Data Source is ECMWF-HRES or ECMWF-ENS, the allowed  values are 
+            10u, 10v, 2t, msl, mp2, mwd, mwp, pp1d, swh, ro, tp, sp, st , tcwv,
+            d, gh, q, r, t, u, v, vo. If the Data Source is Sentinel-2, the
+            allowed  values are S2MSI1C or S2MSI2A. If the Data Source is
+            Copernicus-DEM, the allowed  value is GLO-30-DGED. The product type
+            of the remaining Data SOurces are TBD.
+        start:
+          type: string
+          description: >-
+            Product Data Source reference start date. For Sentinel-2 it
+            corresponds to the Sensing Start.
+          pattern: YYYY-MM-DDThh:mm:ss.sssZ
+          format: date-time
+        stop:
+          type: string
+          description: >-
+            Product Data Source reference stop date. For Sentinel-2 it
+            corresponds to the Sensing Stop. Please note that this parameter is
+            mandatory for the following Data Sources: CMEMS, ECMWF-ERA5,
+            Sentinel-2
+          format: date-time
+          pattern: YYYY-MM-DDThh:mm:ss.sssZ
+        level:
+          type: array
+          items:
+            type: number
+          description: >-
+            Pressure level. Please note that this parameter is applicable only
+            for ECMWF-HRES, ECMWF-ENS, ECMWF-ERA5 and CMEMS Data Sources.
+        area:
+          type: $ref
+          $ref: '#/components/schemas/Area'
+          description: >-
+            Geographical area filter.  Please note that this parameter will be
+            ignored if the layer and roi parameters are both set. An area
+            selection is mandatory for Copernicus-DEM, ECMWF-ERA5 and Sentinel-2
+            Data Sources.
+        filter:
+          type: string
+          description: >-
+            Filter to apply in the HTTP request towards the Data Source.
+            Reserved for Future use.
+        operator:
+          type: string
+          description: Operator applied to the DataStore. Reserved for Future use.
+        Products:
+          type: array
+          items:
+            type: $ref
+            $ref: '#/components/schemas/Product'
+          description: >-
+            Products generated for the Data Store. Ignored in the /datastores
+            POST Request.
+        SourceProducts:
+          type: array
+          items:
+            type: $ref
+            $ref: '#/components/schemas/SourceProduct'
+          description: >-
+            Source Products used as input for the generation of the Products. 
+            Ignored in the /datastores POST Request.
+      xml:
+        name: pet
+      type: object
+    Area:
+      x-swagger-router-model: io.swagger.petstore.model.Order
+      properties:
+        type:
+          type: string
+          description: Area Type
+          enum:
+            - GADM
+            - NUTS
+            - Polygon
+        level:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          default: 2
+          description: >-
+            NUTS/GADM level. This property is madatory if the type is equal to
+            NUTS or GADM.
+        value:
+          type: string
+          description: >-
+            This property is a WKT Polygon if type is equal to Polygon or it is
+            the NUTS/GADM code if the type is NUTS or GADM
+      xml:
+        name: order
+      type: object
+      required:
+        - type
+        - value
+    Product:
+      x-swagger-router-model: io.swagger.petstore.model.Pet
+      required:
+        - name
+        - id
+        - creationDate
+      properties:
+        id:
+          type: string
+          description: Product id
+        name:
+          type: string
+          description: >-
+            Product name (should be unique, the generation time should be used
+            as part of the naming convention)
+        creationDate:
+          type: string
+          description: Product creation date
+          format: date-time
+          pattern: YYYY-MM-DDThh:mm:ss.sssZ
+      xml:
+        name: pet
+      type: object
+      description: Product generated as outcome of a DEA DataStore creation request
+    SourceProduct:
+      x-swagger-router-model: io.swagger.petstore.model.Pet
+      required:
+        - name
+        - id
+      properties:
+        id:
+          type: string
+          description: Source Product id
+        name:
+          type: string
+          description: Source Product name
+        originator:
+          type: string
+          description: >-
+            Source Product originator (describe the product Data Source. e.g.:
+            ONDA Catalogue)
+        originatorUrl:
+          type: string
+          description: >-
+            Source Product originator URL (e.g.:
+            https://catalogue.onda-dias.eu/catalogue/)
+        creationDate:
+          type: string
+          description: Source Product creation date, if available
+          format: date-time
+          pattern: YYYY-MM-DDThh:mm:ss.sssZ
+      xml:
+        name: pet
+      type: object
+      description: >-
+        Source Product used as input of the product generated as outcome of a
+        DEA DataStore creation request
+  requestBodies:
+    Pet:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Pet'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Pet'
+      description: Pet object that needs to be added to the store
+    UserArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+      description: List of user object
+  securitySchemes:
+    dea_auth:
+      type: openIdConnect
+      flows:
+        implicit:
+          authorizationUrl: https://petstore.swagger.io/oauth/authorize
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+      description: DEA Authentication
+      openIdConnectUrl: >-
+        https://keycloak.alia-space.com/auth/realms/PRIP-S2/.well-known/openid-configuration
+    dea_jwt:
+      type: http
+      name: api_key
+      in: header
+      schema: Bearer
+      bearerFormat: JWT
+      description: Bearer
