@@ -26,13 +26,13 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 tags:
-  - name: order
-    description: Operations about orders
   - name: datastore
     description: Operation on Data Stores
     externalDocs:
       description: ''
       url: ''
+  - name: order
+    description: Operations about orders
   - name: product
     description: Operation on Products
     externalDocs:
@@ -715,7 +715,7 @@ components:
             - Copernicus-DEM
             - CMEMS
             - ECMWF-HRES
-            - ECMWF_ENS
+            - ECMWF-ENS
             - ECMWF-ERA5
             - Sentinel-2
           description: Product Data Source
@@ -751,6 +751,9 @@ components:
           type: array
           items:
             type: number
+            description: >-
+              Available values are 1000, 925, 850, 700, 500, 300, 250, 200, 50
+              (applicable for ECMWF-HRES and ECMWF-ENS)
           description: >-
             Pressure level. Please note that this parameter is applicable only
             for ECMWF-HRES, ECMWF-ENS, ECMWF-ERA5 and CMEMS Data Sources.
