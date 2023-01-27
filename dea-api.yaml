@@ -240,7 +240,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
         '404': &ref_9
           description: DEA Data Store Not Found
-          content: &ref_14
+          content:
             application/json:
               schema:
                 type: array
@@ -555,7 +555,7 @@ paths:
         '404': *ref_9
         '500': *ref_10
         '503': *ref_11
-      security: &ref_15
+      security: &ref_14
         - dea_jwt: []
   /datastores/{datastoreId}/sourceProducts:
     get:
@@ -599,11 +599,6 @@ paths:
           description: DEA Product Id
           schema: *ref_12
           required: true
-        - in: header
-          name: ''
-          description: ''
-          schema:
-            type: string
       requestBody: *ref_7
       responses:
         '200':
@@ -617,10 +612,14 @@ paths:
         '401': *ref_13
         '404':
           description: Product Not Found
-          content: *ref_14
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
         '500': *ref_10
         '503': *ref_11
-      security: *ref_15
+      security: *ref_14
 externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
