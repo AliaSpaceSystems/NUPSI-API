@@ -634,7 +634,7 @@ components:
       properties:
         id:
           type: string
-          description: Order ID
+          description: Order ID (UUID format)
         dataStoreId:
           type: string
           description: Id of the corresponding Data Store Request
@@ -706,7 +706,7 @@ components:
       properties:
         id:
           type: string
-          description: DataStore id
+          description: DataStore id  (UUID format)
         datasource:
           type: string
           example: ECMWF-HRES
@@ -835,7 +835,7 @@ components:
       properties:
         id:
           type: string
-          description: Product id
+          description: Product id  (UUID format)
         name:
           type: string
           description: >-
