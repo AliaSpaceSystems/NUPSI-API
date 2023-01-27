@@ -543,8 +543,10 @@ paths:
           content:
             application/json:
               schema:
-                type: $ref
-                $ref: '#/components/schemas/Product'
+                type: array
+                items:
+                  type: $ref
+                  $ref: '#/components/schemas/Product'
                 description: >-
                   Return  List of products generated for the DEA Data Store with
                   the specified Id
@@ -572,8 +574,10 @@ paths:
           content:
             application/json:
               schema:
-                type: $ref
-                $ref: '#/components/schemas/SourceProduct'
+                type: array
+                items:
+                  type: $ref
+                  $ref: '#/components/schemas/SourceProduct'
                 description: >-
                   Return  List of products used as input  for the DEA Data Store
                   Products
