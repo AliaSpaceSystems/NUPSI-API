@@ -33,6 +33,11 @@ tags:
     externalDocs:
       description: ''
       url: ''
+  - name: product
+    description: Operation on Products
+    externalDocs:
+      description: ''
+      url: ''
 paths:
   /datastores:
     post:
@@ -59,7 +64,7 @@ paths:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
         '401':
-          description: Unauthorized
+          description: Access token is missing or invalid
           content:
             application/json:
               schema:
@@ -87,7 +92,7 @@ paths:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
       security:
-        - dea_auth: []
+        - dea_jwt: []
       requestBody:
         description: Create a new DEA Datastore
         required: true
@@ -117,7 +122,7 @@ paths:
                 description: List of available Data Stores
           description: OK
         '401':
-          description: Unauthorized
+          description: Access token is missing or invalid
           content:
             application/json:
               schema:
@@ -138,7 +143,7 @@ paths:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
       security:
-        - dea_auth: []
+        - dea_jwt: []
   /orders/findByStatus:
     get:
       tags: &ref_3
@@ -174,92 +179,13 @@ paths:
                 description: List of orders filtered by Status
         '400':
           description: Invalid status value
-        '500':
-          description: Internal Server Error
-        '503':
-          description: Service Unavailable
-      security: &ref_5
-        - dea_auth: []
-  /datastores/{datastoreId}:
-    get:
-      summary: Return the DEA Data Store with the specified Id
-      description: ''
-      operationId: getDataStore
-      tags: &ref_6
-        - datastore
-      parameters: &ref_7
-        - in: path
-          name: datastoreId
-          description: DEA Data Store Id
-          schema:
-            type: string
-          required: true
-      requestBody: &ref_8 {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: $ref
-                $ref: '#/components/schemas/DataStore'
-                description: Return the DEA Data Store with the specified Id
-          description: OK
-        '401': &ref_9
-          description: Unauthorized
           content:
             application/json:
               schema:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
-        '404': &ref_10
-          description: DEA Data Store Not Found
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: $ref
-                  $ref: '#/components/schemas/DataStore'
-                maxItems: 0
-                minItems: 0
-                description: Return an empty Array
-        '500': &ref_11
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: $ref
-                $ref: '#/components/schemas/ApiResponse'
-        '503': &ref_12
-          description: Service Unavailable
-          content:
-            application/json:
-              schema:
-                type: $ref
-                $ref: '#/components/schemas/ApiResponse'
-      security: &ref_13
-        - dea_auth: []
-  /orders:
-    get:
-      summary: Get the list of user orders
-      description: Get the list of user's orders
-      operationId: getOrders
-      tags:
-        - order
-      parameters: []
-      requestBody: {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: $ref
-                  $ref: '#/components/schemas/Order'
-          description: OK
         '401':
-          description: Unauthorized
+          description: Access token is missing or invalid
           content:
             application/json:
               schema:
@@ -280,7 +206,108 @@ paths:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
       security:
-        - dea_auth: []
+        - dea_jwt: []
+  /datastores/{datastoreId}:
+    get:
+      summary: Return the DEA Data Store with the specified Id
+      description: ''
+      operationId: getDataStore
+      tags: &ref_5
+        - datastore
+      parameters: &ref_6
+        - in: path
+          name: datastoreId
+          description: DEA Data Store Id
+          schema: &ref_12
+            type: string
+          required: true
+      requestBody: &ref_7 {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/DataStore'
+                description: Return the DEA Data Store with the specified Id
+          description: OK
+        '401':
+          description: Access token is missing or invalid
+          content: &ref_8
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '404': &ref_9
+          description: DEA Data Store Not Found
+          content: &ref_14
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: $ref
+                  $ref: '#/components/schemas/DataStore'
+                maxItems: 0
+                minItems: 0
+                description: Return an empty Array
+        '500': &ref_10
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503': &ref_11
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - dea_jwt: []
+  /orders:
+    get:
+      summary: Get the list of user orders
+      description: Get the list of user's orders
+      operationId: getOrders
+      tags:
+        - order
+      parameters: []
+      requestBody: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: $ref
+                  $ref: '#/components/schemas/Order'
+          description: OK
+        '401':
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                type: $ref
+                $ref: '#/components/schemas/ApiResponse'
+      security:
+        - dea_jwt: []
   /orders/{orderId}:
     get:
       summary: Get the Order with the specified Id
@@ -306,7 +333,7 @@ paths:
                 description: Order with the Specified Id
           description: OK
         '401':
-          description: Unauthorized
+          description: Access token is missing or invalid
           content:
             application/json:
               schema:
@@ -334,7 +361,7 @@ paths:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
       security:
-        - dea_auth: []
+        - dea_jwt: []
     delete:
       summary: Delete the Order with the specified Id
       description: Delete the Order with the specified Id with its children
@@ -351,7 +378,7 @@ paths:
         '200':
           description: OK
         '401':
-          description: Unauthorized
+          description: Access token is missing or invalid
           content:
             application/json:
               schema:
@@ -379,7 +406,7 @@ paths:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
       security:
-        - dea_auth: []
+        - dea_jwt: []
     put:
       summary: Update the status of the Order with the specified Id
       description: ''
@@ -415,7 +442,7 @@ paths:
                 description: Return the updated Order
           description: OK
         '401':
-          description: Unauthorized
+          description: Access token is missing or invalid
           content:
             application/json:
               schema:
@@ -442,6 +469,8 @@ paths:
               schema:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
+      security:
+        - dea_jwt: []
   /orders/findById:
     get:
       tags: *ref_3
@@ -473,6 +502,8 @@ paths:
               schema:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
+        '401':
+          description: Access token is missing or invalid
         '404':
           description: Order not Found
           content:
@@ -494,7 +525,8 @@ paths:
               schema:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
-      security: *ref_5
+      security:
+        - dea_jwt: []
       deprecated: true
   /datastores/{datastoreId}/products:
     get:
@@ -503,9 +535,9 @@ paths:
         Return the List of products generated after a successful creation
         request of a DEA Data Store
       operationId: getProductsDataStore
-      tags: *ref_6
-      parameters: *ref_7
-      requestBody: *ref_8
+      tags: *ref_5
+      parameters: *ref_6
+      requestBody: *ref_7
       responses:
         '200':
           content:
@@ -517,11 +549,14 @@ paths:
                   Return  List of products generated for the DEA Data Store with
                   the specified Id
           description: OK
-        '401': *ref_9
-        '404': *ref_10
-        '500': *ref_11
-        '503': *ref_12
-      security: *ref_13
+        '401': &ref_13
+          description: Access token is missing or invalid
+          content: *ref_8
+        '404': *ref_9
+        '500': *ref_10
+        '503': *ref_11
+      security: &ref_15
+        - dea_jwt: []
   /datastores/{datastoreId}/sourceProducts:
     get:
       summary: DEA Data Store Source Products list
@@ -529,9 +564,9 @@ paths:
         Return the List of Source Products used as input of the products
         generated as outcome of a DEA DataStore creation request
       operationId: getSourceProductsDataStore
-      tags: *ref_6
-      parameters: *ref_7
-      requestBody: *ref_8
+      tags: *ref_5
+      parameters: *ref_6
+      requestBody: *ref_7
       responses:
         '200':
           content:
@@ -543,18 +578,56 @@ paths:
                   Return  List of products used as input  for the DEA Data Store
                   Products
           description: OK
-        '401': *ref_9
-        '404': *ref_10
-        '500': *ref_11
-        '503': *ref_12
-      security: *ref_13
+        '401':
+          description: Access token is missing or invalid
+          content: *ref_8
+        '404': *ref_9
+        '500': *ref_10
+        '503': *ref_11
+      security:
+        - dea_jwt: []
+  /products/{productId}/download:
+    get:
+      summary: Download a DEA Product
+      description: Download a DEA Product by product Id
+      operationId: downloadProduct
+      tags:
+        - product
+      parameters:
+        - in: path
+          name: productId
+          description: DEA Product Id
+          schema: *ref_12
+          required: true
+        - in: header
+          name: ''
+          description: ''
+          schema:
+            type: string
+      requestBody: *ref_7
+      responses:
+        '200':
+          content:
+            text:
+              schema:
+                type: string
+                description: application/octect-stream
+                default: application/octect-stream
+          description: OK
+        '401': *ref_13
+        '404':
+          description: Product Not Found
+          content: *ref_14
+        '500': *ref_10
+        '503': *ref_11
+      security: *ref_15
 externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 components:
   schemas:
     Order:
-      x-swagger-router-model: io.swagger.petstore.model.Order
+      x-swagger-router-model: io.swagger.deadatastore.model.Order
       properties:
         id:
           type: string
@@ -604,7 +677,7 @@ components:
           type: integer
           format: int32
           description: HTTP Status Code
-          default: 500
+          default: null
         description:
           type: string
           description: 'Error cause  '
@@ -616,10 +689,13 @@ components:
       xml:
         name: '##default'
       type: object
-      required: []
+      required:
+        - code
+        - description
+        - message
       description: Object used as response in case of errors
     DataStore:
-      x-swagger-router-model: io.swagger.petstore.model.Pet
+      x-swagger-router-model: io.swagger.deadatastore.model.DataStore
       required:
         - datasource
         - start
@@ -708,10 +784,10 @@ components:
             Source Products used as input for the generation of the Products. 
             Ignored in the /datastores POST Request.
       xml:
-        name: pet
+        name: datastore
       type: object
     Area:
-      x-swagger-router-model: io.swagger.petstore.model.Order
+      x-swagger-router-model: io.swagger.deadatastore.model.Area
       properties:
         type:
           type: string
@@ -745,7 +821,7 @@ components:
         - type
         - value
     Product:
-      x-swagger-router-model: io.swagger.petstore.model.Pet
+      x-swagger-router-model: io.swagger.deadatastore.model.Product
       required:
         - name
         - id
@@ -765,11 +841,11 @@ components:
           format: date-time
           pattern: YYYY-MM-DDThh:mm:ss.sssZ
       xml:
-        name: pet
+        name: product
       type: object
       description: Product generated as outcome of a DEA DataStore creation request
     SourceProduct:
-      x-swagger-router-model: io.swagger.petstore.model.Pet
+      x-swagger-router-model: io.swagger.deadatastore.model.SourceProduct
       required:
         - name
         - id
@@ -790,44 +866,54 @@ components:
           description: >-
             Source Product originator URL (e.g.:
             https://catalogue.onda-dias.eu/catalogue/)
-        creationDate:
+        validityStart:
           type: string
-          description: Source Product creation date, if available
+          description: Source Product validity start date, if available
           format: date-time
           pattern: YYYY-MM-DDThh:mm:ss.sssZ
+        validityStop:
+          type: string
+          description: Source Product validity stop date, if available
+          format: date-time
+          pattern: YYYY-MM-DDThh:mm:ss.sssZ
+        initialState:
+          type: string
+          description: Source Product initial state, if applicable
+          enum:
+            - OFFLINE
+            - ONLINE
+        retrievalStatus:
+          type: string
+          description: Source Product retrieval status
+          enum:
+            - AVAILABLE
+            - QUEUED
+            - UNAVAILABLE
       xml:
-        name: pet
+        name: sourceproduct
       type: object
       description: >-
         Source Product used as input of the product generated as outcome of a
         DEA DataStore creation request
   requestBodies:
-    Pet:
+    DataStore:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Pet'
+            $ref: '#/components/schemas/DataStore'
         application/xml:
           schema:
-            $ref: '#/components/schemas/Pet'
-      description: Pet object that needs to be added to the store
-    UserArray:
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/User'
-      description: List of user object
+            $ref: '#/components/schemas/DataStore'
+      description: DataStore object that needs to be created
   securitySchemes:
     dea_auth:
       type: openIdConnect
       flows:
         implicit:
-          authorizationUrl: https://petstore.swagger.io/oauth/authorize
+          authorizationUrl: https://deadatastore.swagger.io/oauth/authorize
           scopes:
-            write:pets: modify pets in your account
-            read:pets: read your pets
+            write:datastores: modify datastores in your account
+            read:datastores: read your datastores
       description: DEA Authentication
       openIdConnectUrl: >-
         https://keycloak.alia-space.com/auth/realms/PRIP-S2/.well-known/openid-configuration
