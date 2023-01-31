@@ -527,7 +527,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
       security:
         - dea_jwt: []
-      deprecated: true
+      deprecated: false
   /datastores/{datastoreId}/products:
     get:
       summary: DEA Data Store products list
