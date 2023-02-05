@@ -157,7 +157,7 @@ paths:
           description: Status values that need to be considered for filter
           required: false
           explode: true
-          schema: &ref_4
+          schema:
             type: string
             enum:
               - QUEUED
@@ -212,16 +212,16 @@ paths:
       summary: Return the DEA Data Store with the specified Id
       description: ''
       operationId: getDataStore
-      tags: &ref_5
+      tags: &ref_4
         - datastore
-      parameters: &ref_6
+      parameters: &ref_5
         - in: path
           name: datastoreId
           description: DEA Data Store Id
-          schema: &ref_12
+          schema: &ref_11
             type: string
           required: true
-      requestBody: &ref_7 {}
+      requestBody: &ref_6 {}
       responses:
         '200':
           content:
@@ -233,12 +233,12 @@ paths:
           description: OK
         '401':
           description: Access token is missing or invalid
-          content: &ref_8
+          content: &ref_7
             application/json:
               schema:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
-        '404': &ref_9
+        '404': &ref_8
           description: DEA Data Store Not Found
           content:
             application/json:
@@ -250,14 +250,14 @@ paths:
                 maxItems: 0
                 minItems: 0
                 description: Return an empty Array
-        '500': &ref_10
+        '500': &ref_9
           description: Internal Server Error
           content:
             application/json:
               schema:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
-        '503': &ref_11
+        '503': &ref_10
           description: Service Unavailable
           content:
             application/json:
@@ -485,7 +485,9 @@ paths:
           description: Order Id considered for filter
           required: true
           explode: true
-          schema: *ref_4
+          schema:
+            type: string
+            default: ''
       responses:
         '200':
           description: Request OK
@@ -535,9 +537,9 @@ paths:
         Return the List of products generated after a successful creation
         request of a DEA Data Store
       operationId: getProductsDataStore
-      tags: *ref_5
-      parameters: *ref_6
-      requestBody: *ref_7
+      tags: *ref_4
+      parameters: *ref_5
+      requestBody: *ref_6
       responses:
         '200':
           content:
@@ -551,13 +553,13 @@ paths:
                   Return  List of products generated for the DEA Data Store with
                   the specified Id
           description: OK
-        '401': &ref_13
+        '401': &ref_12
           description: Access token is missing or invalid
-          content: *ref_8
-        '404': *ref_9
-        '500': *ref_10
-        '503': *ref_11
-      security: &ref_14
+          content: *ref_7
+        '404': *ref_8
+        '500': *ref_9
+        '503': *ref_10
+      security: &ref_13
         - dea_jwt: []
   /datastores/{datastoreId}/sourceProducts:
     get:
@@ -566,9 +568,9 @@ paths:
         Return the List of Source Products used as input of the products
         generated as outcome of a DEA DataStore creation request
       operationId: getSourceProductsDataStore
-      tags: *ref_5
-      parameters: *ref_6
-      requestBody: *ref_7
+      tags: *ref_4
+      parameters: *ref_5
+      requestBody: *ref_6
       responses:
         '200':
           content:
@@ -584,10 +586,10 @@ paths:
           description: OK
         '401':
           description: Access token is missing or invalid
-          content: *ref_8
-        '404': *ref_9
-        '500': *ref_10
-        '503': *ref_11
+          content: *ref_7
+        '404': *ref_8
+        '500': *ref_9
+        '503': *ref_10
       security:
         - dea_jwt: []
   /products/{productId}/download:
@@ -601,9 +603,9 @@ paths:
         - in: path
           name: productId
           description: DEA Product Id
-          schema: *ref_12
+          schema: *ref_11
           required: true
-      requestBody: *ref_7
+      requestBody: *ref_6
       responses:
         '200':
           content:
@@ -613,7 +615,7 @@ paths:
                 description: application/octect-stream
                 default: application/octect-stream
           description: OK
-        '401': *ref_13
+        '401': *ref_12
         '404':
           description: Product Not Found
           content:
@@ -621,9 +623,9 @@ paths:
               schema:
                 type: $ref
                 $ref: '#/components/schemas/ApiResponse'
-        '500': *ref_10
-        '503': *ref_11
-      security: *ref_14
+        '500': *ref_9
+        '503': *ref_10
+      security: *ref_13
 externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
@@ -922,7 +924,7 @@ components:
             read:datastores: read your datastores
       description: DEA Authentication
       openIdConnectUrl: >-
-        https://keycloak.alia-space.com/auth/realms/PRIP-S2/.well-known/openid-configuration
+        https://keycloak.alia-space.com/auth/realms/DEA/.well-known/openid-configuration
     dea_jwt:
       type: http
       name: api_key
