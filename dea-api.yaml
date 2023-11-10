@@ -4,7 +4,7 @@ servers:
     varibles: {}
 info:
   description: >-
-    DEA Datastore API based on the OpenAPI 3.0 specification.  You can find out
+    NUPSI API based on the OpenAPI 3.0 specification.  You can find out
     more about
 
     Swagger at [http://swagger.io](http://swagger.io). 
@@ -18,7 +18,7 @@ info:
     - [The source API definition for the DEA
     Datastore](https://github.com/AliaSpaceSystems/DEA-API/blob/docs/dea-api.yaml)
   version: 0.0.1
-  title: Swagger DEA Datastore - OpenAPI 3.0
+  title: Swagger NUPSI - OpenAPI 3.0
   termsOfService: http://swagger.io/terms/
   contact:
     email: destine@alia-space.com
