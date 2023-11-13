@@ -34,7 +34,7 @@ paths:
   /personalAreaOfInterest:
     post:
       tags:
-        - datastore
+        - personalAreaOfInterest
       summary: 'Create a new NUPSI personalAreaOfInterest request '
       description: Add a new request to create a new NUPSI personalAreaOfInterest
       operationId: addPersonalAreaOfInterest
@@ -285,7 +285,7 @@ components:
       type: http
       name: api_key
       in: header
-      schema: Bearer
+      scheme: Bearer
       bearerFormat: JWT
       description: Bearer
   links: {}
