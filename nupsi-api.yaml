@@ -1,7 +1,6 @@
 openapi: 3.0.2
 servers:
   - url: / v3
-    varibles: {}
 info:
   description: >-
     NUPSI API based on the OpenAPI 3.0 specification.  You can find out more
@@ -102,7 +101,6 @@ paths:
       tags:
         - personalAreaOfInterest
       parameters: []
-      requestBody: {}
       responses:
         '200':
           content:
@@ -151,7 +149,6 @@ paths:
           schema:
             type: string
           required: true
-      requestBody: {}
       responses:
         '200':
           content:
