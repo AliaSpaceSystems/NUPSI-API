@@ -137,7 +137,7 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
       security:
         - dea_jwt: []
-  '/personalAreaOfInterest/{datastoreId}':
+  /personalAreaOfInterest/{datastoreId}:
     get:
       summary: Return the NUPSI personalAreaOfInterest with the specified Id
       description: ''
@@ -146,7 +146,7 @@ paths:
         - personalAreaOfInterest
       parameters:
         - in: path
-          name: personalAreaOfInterestId
+          name: datastoreId
           description: NUPSI personalAreaOfInterest Id
           schema:
             type: string
