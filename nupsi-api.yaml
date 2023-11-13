@@ -1,6 +1,4 @@
 openapi: 3.0.2
-servers:
-  - url: / v3
 info:
   description: >-
     NUPSI API based on the OpenAPI 3.0 specification.  You can find out more
@@ -42,45 +40,38 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: '#/components/schemas/PersonalAreaOfInterest'
                 description: Return the personalAreaOfInterest created
-                properties: {}
           description: Created
         '400':
           description: Bad Parameters
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
         '401':
           description: Access token is missing or invalid
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
         '429':
           description: Too many Requests
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
         '500':
           description: Internal Server Eerror
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
         '503':
           description: Service Unavailable
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
       security:
         - dea_jwt: []
@@ -108,7 +99,6 @@ paths:
               schema:
                 type: array
                 items:
-                  type: $ref
                   $ref: '#/components/schemas/PersonalAreaOfInterest'
                 description: List of available personalAreaOfInterest
           description: OK
@@ -117,21 +107,18 @@ paths:
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
         '503':
           description: Service Unavailable
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
       security:
         - dea_jwt: []
@@ -154,7 +141,6 @@ paths:
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/PersonalAreaOfInterest'
                 description: Return the NUPSI personalAreaOfInterest with the specified Id
           description: OK
@@ -163,7 +149,6 @@ paths:
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
         '404':
           description: NUPSI personalAreaOfInterest Not Found
@@ -172,7 +157,6 @@ paths:
               schema:
                 type: array
                 items:
-                  type: $ref
                   $ref: '#/components/schemas/PersonalAreaOfInterest'
                 maxItems: 0
                 minItems: 0
@@ -182,14 +166,12 @@ paths:
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
         '503':
           description: Service Unavailable
           content:
             application/json:
               schema:
-                type: $ref
                 $ref: '#/components/schemas/ApiResponse'
       security:
         - dea_jwt: []
@@ -228,7 +210,7 @@ components:
         - type
         - value
       properties:
-        type:
+        areaType:
           type: string
           description: Area Type
           enum:
@@ -265,7 +247,7 @@ components:
         application/xml:
           schema:
             $ref: '#/components/schemas/PersonalAreaOfInterest'
-      description: DataStore object that needs to be created
+      description: personalAreaOfInterest object that needs to be created
   securitySchemes:
     dea_auth:
       type: openIdConnect
@@ -273,8 +255,8 @@ components:
         implicit:
           authorizationUrl: 'https://deadatastore.swagger.io/oauth/authorize'
           scopes:
-            'write:datastores': modify datastores in your account
-            'read:datastores': read your datastores
+            'write:personalAreaOfInterest': modify personalAreaOfInterest in your account
+            'read:personalAreaOfInterest': read your personalAreaOfInterest
       description: DEA Authentication
       openIdConnectUrl: >-
         https://keycloak.alia-space.com/auth/realms/DEA/.well-known/openid-configuration
